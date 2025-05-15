@@ -34,7 +34,8 @@ export const useFileInput = (maxSize: number) => {
       const objectUrl = URL.createObjectURL(selectedFile);
       setPreviewUrl(objectUrl);
 
-      if (selectedFile.type.startsWith("video")) {
+      // Extract duration for video files.
+      if (selectedFile.type.startsWith("video/")) {
         const video = document.createElement("video");
 
         video.preload = "metadata";
