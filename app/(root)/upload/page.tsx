@@ -49,6 +49,46 @@ const Upload = () => {
     }
   }, [video.duration]);
 
+  useEffect(() => {
+    const checkForRecordedVideo = async () => {
+      try {
+        // getting recorded video from sessionStorage
+        const stored = sessionStorage.getItem("recordedVideo");
+        if (!stored) return;
+
+        const { name, url, type, duration } = JSON.parse(stored);
+        const blob = await fetch(url).then((res) => res.blob());
+
+        const file = new File([blob], name, { type, lastModified: Date.now() });
+
+        // uploading the file programmatically
+        if (video.inputRef.current) {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+
+          video.inputRef.current.files = dataTransfer.files;
+
+          const event = new Event("change", { bubbles: true });
+          video.inputRef.current.dispatchEvent(event);
+
+          video.handleFileChange({
+            target: {
+              files: dataTransfer.files,
+            },
+          } as ChangeEvent<HTMLInputElement>);
+        }
+
+        if (duration) setVideoDuration(duration);
+
+        sessionStorage.removeItem("recordedVideo");
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error(error, "Error loading recorded video");
+      }
+    };
+    checkForRecordedVideo();
+  }, [video]);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -108,7 +148,7 @@ const Upload = () => {
       });
 
       // navigate to video details page
-      router.push(`/video/${videoId}`);
+      router.push(`/`);
     } catch (error) {
       console.log("Error submitting form: ", error);
     } finally {
