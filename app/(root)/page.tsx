@@ -12,7 +12,6 @@ const HomePage = async ({ searchParams }: SearchParams) => {
     filter,
     Number(page) || 1
   );
-  console.log(videos);
 
   return (
     <main className="wrapper page">

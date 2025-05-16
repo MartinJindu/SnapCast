@@ -153,6 +153,7 @@ export const saveVideoDetails = withErrorHandling(
   }
 );
 
+// get all videos
 export const getAllVideos = withErrorHandling(
   async (
     searchQuery: string = "",
@@ -205,3 +206,12 @@ export const getAllVideos = withErrorHandling(
     };
   }
 );
+
+// get single video details
+export const getVideoById = withErrorHandling(async (videoId: string) => {
+  const [videoRecord] = await buildVideoWithUserQuery().where(
+    eq(videos.id, videoId)
+  );
+
+  return videoRecord;
+});
