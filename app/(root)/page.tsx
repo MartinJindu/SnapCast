@@ -25,7 +25,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
               key={video.id}
               {...video}
               username={user?.name!}
-              userImg={user?.image || "Guest"}
+              userImg={user?.image || "Guests"}
               thumbnail={video.thumbnailUrl}
             />
           ))}
